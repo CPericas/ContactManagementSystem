@@ -146,7 +146,45 @@ def display_contacts(contacts):
     else:
         print("No contacts available.")
 
+def export_contacts(contacts):
+    filename = "contacts.txt"
+    with open(filename, "w") as file:
+        for unique_id, contact_details in contacts.items():
+            file.write(f"Unique Identifier: {unique_id}\n")
+            file.write(f"Name: {contact_details['Name']}\n")
+            file.write(f"Phone Number: {contact_details['Phone Number']}\n")
+            file.write(f"Email: {contact_details['Email']}\n")
+            file.write(f"Address: {contact_details['Address']}\n")
+            file.write(f"Notes: {contact_details['Notes']}\n")
+            file.write("-" * 30 + "\n")
+    print(f"Contacts exported to '{filename}' successfully.")
 
+
+def import_contacts(contacts):
+    filename = "contacts.txt"
+    try:
+        with open(filename, "r") as file:
+            lines = file.readlines()
+            current_contact = {}
+            for line in lines:
+                line = line.strip()
+                if line.startswith("Unique Identifier:"):
+                    unique_id = line.split(":")[1].strip()
+                    current_contact = {'Name': '', 'Phone Number': '', 'Email': '', 'Address': '', 'Notes': ''}
+                    contacts[unique_id] = current_contact
+                elif line.startswith("Name:"):
+                    current_contact['Name'] = line.split(":")[1].strip()
+                elif line.startswith("Phone Number:"):
+                    current_contact['Phone Number'] = line.split(":")[1].strip()
+                elif line.startswith("Email:"):
+                    current_contact['Email'] = line.split(":")[1].strip()
+                elif line.startswith("Address:"):
+                    current_contact['Address'] = line.split(":")[1].strip()
+                elif line.startswith("Notes:"):
+                    current_contact['Notes'] = line.split(":")[1].strip()
+        print(f"Contacts imported from '{filename}' successfully.")
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
 
 def main():
     contacts = {}
@@ -166,17 +204,14 @@ def main():
         elif choice == '5':
             display_contacts(contacts)
         elif choice == '6':
-            print("You selected: Export contacts to a text file")
-            # Implement exporting contacts to a text file
+            export_contacts(contacts)
         elif choice == '7':
-            print("You selected: Import contacts from a text file (BONUS)")
-            # Implement importing contacts from a text file (BONUS)
+            import_contacts(contacts)
         elif choice == '8':
             print("Exiting the Contact Management System. Goodbye!")
             break
         else:
             print("Invalid choice. Please enter a number between 1 and 8.")
 
-if __name__ == "__main__":
-    main()
+main()
 
